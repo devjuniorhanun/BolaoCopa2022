@@ -15,18 +15,25 @@ export async function pollRoutes(fastify: FastifyInstance) {
 
   // Inseri um novo bolão
   fastify.post('/polls', async (request, reply) => {
+    // Valida o titulo do bolão
     const createPoolBody = z.object({
       title: z.string(),
     })
 
+    // Pega o titulo do bolão
     const { title } = createPoolBody.parse(request.body);
 
+    // Gera os 6 digitos do codigo
     const generate = new ShortUniqueId({ length: 6 })
+    // Converte em maiusculo
     const code = String(generate()).toUpperCase()
 
+    // Cria uma validação Jwt, se não estiver autenticado cria um unico bolão.
+    // se estiver logado, criar o bolão e ja começa o bolão como participante
     try {
       await request.jwtVerify()
 
+      // Inseri o novo Bolão
       await prisma.poll.create({
         data: {
           title,
@@ -50,7 +57,7 @@ export async function pollRoutes(fastify: FastifyInstance) {
     }
 
 
-
+    // Retornar o código do bolão recem criado
     return reply.status(201).send({ code })
   })
 

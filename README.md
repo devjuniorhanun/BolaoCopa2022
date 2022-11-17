@@ -37,7 +37,7 @@ cd nomeProjeto
 ```
 Instalação das dependencias do node.
 ```
-cd servidor
+cd server
 npm i
 cd ../web
 npm i
@@ -49,6 +49,7 @@ npm i
 
 Gerar o arquivo .env
 ```
+cd server
 cp .env.example .env
 ```
 Configurar o arquivo .env
@@ -61,7 +62,7 @@ npx prisma migrate dev
 ```
 Rotando o servidor
 ```
-cd servidor
+cd server
 npm run dev
 ```
 Rotando o Web

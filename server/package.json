@@ -20,7 +20,7 @@
   "author": "Winston Hanun Júnior",
   "license": "MIT",
   "prisma": {
-    "seed": "tsx prisma/seed.ts"
+    "seed": "tsx prisma/seed.tsx"
   },
   "bugs": {
     "url": "https://github.com/devjuniorhanun/BolaoCopa2022/issues"
