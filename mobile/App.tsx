@@ -12,6 +12,7 @@ export default function App() {
   return (
     // Habilitando o Native Base
     <NativeBaseProvider theme={THEME}>
+      // Contesto de Autenticação
       <AuthContextProvider>
         <StatusBar
           barStyle="light-content"

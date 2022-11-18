@@ -56,9 +56,13 @@ Configurar o arquivo .env
 ```
 nano .env
 ```
-Rotando as migrates e seeds
+Rotando as migrates
 ```
 npx prisma migrate dev
+```
+Rotando os seeds
+```
+npx prisma db seed
 ```
 Rotando o servidor
 ```
@@ -78,6 +82,10 @@ npx run dev
 Conectar no servidor
 ```
 http://localhost:3333
+```
+Conectar no web
+```
+http://localhost:3000
 ```
 
 ## Licença

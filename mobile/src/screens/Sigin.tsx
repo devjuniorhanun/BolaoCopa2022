@@ -5,6 +5,7 @@ import Logo from '../assets/logo.svg';
 import { Button } from "../components/Button";
 
 export function SingIn() {
+    // Contexto de Autenticação
     const { singIn, user } = useAuth();
 
    // console.log('Dados do Usuário =>', user)
@@ -18,7 +19,6 @@ export function SingIn() {
                 leftIcon={<Icon as={Fontisto} name="google" color="white" size="md" />}
                 mt={12}
                 onPress={singIn}
-
             />
             <Text color="white" textAlign="center" mt={4}>
                 Não utilizamos nenhuma informção além {'\n'} do seu E-mail, para criação de sua conta.

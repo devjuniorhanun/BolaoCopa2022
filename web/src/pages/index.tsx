@@ -72,7 +72,7 @@ export default function Home(props: HomeProps) {
           </button>
         </form>
         <p className='mt-4 text-sm text-gray-300 leading-relaxed'>
-          Após criar seu bolão, você receberá um código único que poderá ser usados para convidar seus amigos...
+          Após criar seu bolão, você receberá um código único que poderá ser usados para convidar seus amigos 🚀...
         </p>
 
         <div className='mt-10 pt-10 border-t border-gray-600 flex items-center justify-between text-gray-100'>
@@ -97,12 +97,11 @@ export default function Home(props: HomeProps) {
 
       <Image src={appPreviewImg} alt="Logo" />
 
-
     </div>
   )
 }
 
-// Esportando as conexões com a api
+// Iniciando as conexões com a api
 export const getServerSideProps = async () => {
   const [
     pollCountResponse, // Traz a quantidade de bolões cadastrados
