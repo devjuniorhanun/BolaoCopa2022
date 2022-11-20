@@ -12,6 +12,7 @@ mobile/*.orig.*
 mobile/web-build/
 # macOS
 mobile/.DS_Store
+mobile/.env
 
 # Servidor
 server/node_modules

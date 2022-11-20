@@ -6,6 +6,7 @@ import { gameRoutes } from './routes/game';
 import { guessRoutes } from './routes/guess';
 import { userRoutes } from './routes/user';
 import { pollRoutes } from './routes/poll';
+require('dotenv').config()
 
 // Método inicial 
 async function bootstrap() {
@@ -20,10 +21,9 @@ async function bootstrap() {
         origin: true
     })
 
-    // Em produção isso precisa ser uma viarável de ambiente
-
+    // Chave para geração do Jwt
     await fastify.register(jwt, {
-        secret: 'nlwcopa',
+        secret: `${process.env.REACT_APP_JWT_SECRET}`,
     })
 
     // Rotas iniciais

@@ -33,13 +33,14 @@ export async function pollRoutes(fastify: FastifyInstance) {
     try {
       await request.jwtVerify()
 
-      // Inseri o novo Bolão
+      // Inseri o novo Bolão com o Id do Usuário Logado
       await prisma.poll.create({
         data: {
           title,
           code,
-          ownerId: request.user.sub,
+          ownerId: request.user.sub, // Id Usuário Logado 
 
+          // Delegando o Usuário Logodo como participante do Bolão rescem criado
           participants: {
             create: {
               userId: request.user.sub,
@@ -48,6 +49,7 @@ export async function pollRoutes(fastify: FastifyInstance) {
         }
       })
     } catch {
+      // Cria um bolão sem Dono
       await prisma.poll.create({
         data: {
           title,
@@ -157,11 +159,12 @@ export async function pollRoutes(fastify: FastifyInstance) {
     return { polls }
   })
 
+  // Busca um Bolão ja cadastro
   fastify.get('/polls/:id', {
-    onRequest: [authenticate]
+    onRequest: [authenticate] // Verifica a autenticação
   }, async (request) => {
     const getPoolParams = z.object({
-      id: z.string(),
+      id: z.string(), // Código do Bolão para pesquisar
     })
 
     const { id } = getPoolParams.parse(request.params)

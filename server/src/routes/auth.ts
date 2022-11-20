@@ -6,6 +6,7 @@ import { authenticate } from "../plugins/authenticate"
 
 // Listando todas as rotas de autenticação
 export async function authRoutes(fastify: FastifyInstance) {
+  // Retorna o Usuário Logado
   fastify.get('/me', {
     onRequest: [authenticate]
   }, async (request) => {
@@ -28,16 +29,18 @@ export async function authRoutes(fastify: FastifyInstance) {
       }
     })
 
+    // Informações do usuário
     const userData = await userResponse.json()
 
     // Validações do retorno de dados do google
     const userInfoSchema = z.object({
-      id: z.string(),
-      email: z.string().email(),
-      name: z.string(),
-      picture: z.string().url(),
+      id: z.string(), // id do google
+      email: z.string().email(), // email
+      name: z.string(), // nome
+      picture: z.string().url(), // foto de perfil
     })
 
+    // Validações
     const userInfo = userInfoSchema.parse(userData)
 
     // Verifica se o usuário existe
@@ -47,6 +50,7 @@ export async function authRoutes(fastify: FastifyInstance) {
       }
     })
 
+    // Se não existir o usuário ele criar um
     if (!user) {
       user = await prisma.user.create({
         data: {
@@ -58,14 +62,16 @@ export async function authRoutes(fastify: FastifyInstance) {
       })
     }
 
-    const token =  fastify.jwt.sign({
-      name: user.name,
-      avatarUrl: user.avatarUrl,
+    // Criação do Token do Jwt
+    const token = fastify.jwt.sign({
+      name: user.name, // Nome do Usuário
+      avatarUrl: user.avatarUrl, // Avatar do Usuário
     }, {
-      sub: user.id,
-      expiresIn: '7 days'
+      sub: user.id, // Usuário que criou o Token
+      expiresIn: '7 days' // Tempo de Expiração
     })
 
+    // Token gerado
     return { token }
   })
 }
