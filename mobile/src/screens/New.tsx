@@ -4,7 +4,7 @@ import Logo from '../assets/logo.svg'
 import { Input } from "../components/Input";
 import { Button } from "../components/Button";
 
-
+// Arquivo de criação de novos bolões
 export function New() {
     return (
         <VStack flex={1} bg="gray.900">

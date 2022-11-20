@@ -2,6 +2,7 @@ import { createContext, ReactNode, useState, useEffect } from "react";
 import * as Google from 'expo-auth-session/providers/google';
 import * as AuthSession from 'expo-auth-session';
 import * as WebBrowser from 'expo-web-browser';
+import { CLIENT_ID_GOOGLE } from 'react-native-dotenv';
 
 // Redirecionamento da autenticação
 WebBrowser.maybeCompleteAuthSession();
@@ -35,7 +36,7 @@ export function AuthContextProvider({ children }: AuthProviderProps) {
 
     // Criação da autenticação do Google
     const [request, response, promptAsync] = Google.useAuthRequest({
-        clientId: '126774484467-5q5lnvpnr3vuo7pkvfstkao6uhb5kdof.apps.googleusercontent.com', // clienteId do Google
+        clientId: `${CLIENT_ID_GOOGLE}`, // clienteId do Google
         redirectUri: AuthSession.makeRedirectUri({ useProxy: true }),
         scopes: ['profile', 'email'],
     });
