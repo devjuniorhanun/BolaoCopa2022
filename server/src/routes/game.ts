@@ -6,17 +6,19 @@ import { authenticate } from "../plugins/authenticate"
 // Listando todas as rotas dos jogos
 export async function gameRoutes(fastify: FastifyInstance) {
   fastify.get('/pools/:id/games', {
-    onRequest: [authenticate]
+    onRequest: [authenticate] // Verifica autenticação
   },async (request) => {
+    // Vefirica se foi passado o Id do Bolão
     const getPoolParams = z.object({
       id: z.string(),
     })
 
-    const { id } = getPoolParams.parse(request.params)
+    const { id } = getPoolParams.parse(request.params) // Id do Bolão
 
+    // Lista os jogos do bolão
     const games = await prisma.game.findMany({
       orderBy: {
-        date: 'desc',
+        date: 'desc', // Ordernação descendente
       },
       include: {
         guesses: {
@@ -30,6 +32,7 @@ export async function gameRoutes(fastify: FastifyInstance) {
       }
     })
 
+    // Retorna os palpites de um determinado jogo
     return {
       games: games.map(game => {
         return {

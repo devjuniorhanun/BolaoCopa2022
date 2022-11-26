@@ -58,24 +58,27 @@ export async function pollRoutes(fastify: FastifyInstance) {
       })
     }
 
-
     // Retornar o código do bolão recem criado
     return reply.status(201).send({ code })
   })
 
+  // Rota para busca o Bolão pelo seu código
   fastify.post('/polls/join', {
-    onRequest: [authenticate]
+    onRequest: [authenticate] // Verifica se esta autenticado
   }, async (request, reply) => {
     const joinPoolBody = z.object({
-      code: z.string(),
+      code: z.string(), // Valida se foi informado o Código do Bolão
     })
 
+    // Recebe o código do bolão
     const { code } = joinPoolBody.parse(request.body)
 
+    // Pesquisa pelo bolão
     const poll = await prisma.poll.findUnique({
       where: {
         code,
       },
+      // Verifica se o usuário logado ja participa do bolão
       include: {
         participants: {
           where: {
@@ -85,18 +88,21 @@ export async function pollRoutes(fastify: FastifyInstance) {
       }
     })
 
+    // Se o boão não existir
     if (!poll) {
       return reply.status(400).send({
-        message: 'Pool not found.'
+        message: 'Bolão não encontrado.'
       })
     }
 
+    // Se o usuário ja estiver pariticando do bolão
     if (poll.participants.length > 0) {
       return reply.status(400).send({
-        message: 'You are already a join this poll.'
+        message: 'Você já esta no Bolão.'
       })
     }
 
+    // Verifica se existe algum dono do bolão, se não tiver ser o primeiro participante logado
     if (!poll.ownerId) {
       await prisma.poll.update({
         where: {
@@ -108,6 +114,7 @@ export async function pollRoutes(fastify: FastifyInstance) {
       })
     }
 
+    // Cria um relacionamento do usuário logado com o bolão
     await prisma.participant.create({
       data: {
         pollId: poll.id,
@@ -115,27 +122,29 @@ export async function pollRoutes(fastify: FastifyInstance) {
       }
     })
 
+    // Sucesso
     return reply.status(201).send()
   })
 
+  // Lista os bolões do usuário logado, participa
   fastify.get('/polls', {
-    onRequest: [authenticate]
+    onRequest: [authenticate] // verifica autenticação
   }, async (request) => {
     const polls = await prisma.poll.findMany({
       where: {
         participants: {
-          some: {
-            userId: request.user.sub,
+          some: { // verifica se o usuário logado pertenci ao bolão
+            userId: request.user.sub, // Id do usuário logado
           }
         }
       },
       include: {
-        _count: {
+        _count: { // Quantidade de participante no bolão
           select: {
             participants: true,
           }
         },
-        participants: {
+        participants: { // Traz todos os participantes do bolão
           select: {
             id: true,
 
@@ -145,7 +154,7 @@ export async function pollRoutes(fastify: FastifyInstance) {
               }
             }
           },
-          take: 4,
+          take: 4, // Limita a qunatidade de avatares a serem mostrado
         },
         owner: {
           select: {
@@ -156,10 +165,11 @@ export async function pollRoutes(fastify: FastifyInstance) {
       }
     })
 
+    // Retorna todos os Bolões
     return { polls }
   })
 
-  // Busca um Bolão ja cadastro
+  // Detalhes de um determinado bolão
   fastify.get('/polls/:id', {
     onRequest: [authenticate] // Verifica a autenticação
   }, async (request) => {
@@ -167,8 +177,9 @@ export async function pollRoutes(fastify: FastifyInstance) {
       id: z.string(), // Código do Bolão para pesquisar
     })
 
-    const { id } = getPoolParams.parse(request.params)
+    const { id } = getPoolParams.parse(request.params) // Id do Bolão
 
+    // Pesquisa pelo bolão, pelo id
     const poll = await prisma.poll.findUnique({
       where: {
         id,
@@ -200,6 +211,7 @@ export async function pollRoutes(fastify: FastifyInstance) {
       }
     })
 
+    // Retornar o Bolão selecionado
     return { poll }
   })
 }

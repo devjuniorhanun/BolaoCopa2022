@@ -11,17 +11,18 @@ export async function guessRoutes(fastify: FastifyInstance) {
     return { count }
   })
 
+  // Criando um palpite
   fastify.post('/pools/:poolId/games/:gameId/guesses', {
-    onRequest: [authenticate]
+    onRequest: [authenticate] // Valida a autenticação
   },async (request, reply) => {
     const createGuessParams = z.object({
-      poolId: z.string(),
-      gameId: z.string(),
+      poolId: z.string(), // Valida o id do bolão
+      gameId: z.string(), // Valida o id do jogo
     })
 
     const createGuessBody = z.object({
-      firstTeamPoints: z.number(),
-      secondTeamPoints: z.number(),
+      firstTeamPoints: z.number(), // instancia o valor do primeiro time
+      secondTeamPoints: z.number(), // instancia o valor do segundo time
     });
 
     const { poolId, gameId } = createGuessParams.parse(request.params)

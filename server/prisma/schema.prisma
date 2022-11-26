@@ -24,7 +24,6 @@ model Poll {
   code      String   @unique
   createdAt DateTime @default(now())
   ownerId   String?
-
   participants Participant[]
   owner        User?         @relation(fields: [ownerId], references: [id])
 }
@@ -34,11 +33,9 @@ model Participant {
   id     String @id @default(cuid())
   userId String
   pollId String
-
   guesses Guess[]
   user    User    @relation(fields: [userId], references: [id])
   poll    Poll    @relation(fields: [pollId], references: [id])
-
   @@unique([userId, pollId])
 }
 
@@ -50,7 +47,6 @@ model User {
   googleId  String?  @unique
   avatarUrl String?
   createdAt DateTime @default(now())
-
   participatingAt Participant[]
   ownPolls        Poll[]
 }
@@ -59,25 +55,20 @@ model User {
 model Game {
   id   String   @id @default(cuid())
   date DateTime
-
   firstTeamCountryCode  String
   secondTeamCountryCode String
-
   guesses Guess[]
 }
 
 // Palpites
 model Guess {
   id String @id @default(cuid())
-
   firstTeamPoints  Int
   secondTeamPoints Int
   createdAt        DateTime @default(now())
   gameId           String
   participantId    String
-
   participant Participant @relation(fields: [participantId], references: [id])
   game        Game        @relation(fields: [gameId], references: [id])
-
   @@unique([participantId, gameId])
 }
